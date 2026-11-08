@@ -29,7 +29,7 @@ Programa la resolución del **Ejercicio 5.12 de [21]**, que dice:
 
 Considera conducir un coche de carreras alrededor de una curva, como las mostradas en la siguiente figura.
 
-![Circuitos con líneas de salida y meta del ejercicio 5.12](practica_2_assets/circuitos.png)
+![Circuitos con líneas de salida y meta del ejercicio 5.12](circuitos.png)
 
 Quieres ir lo más rápido posible, pero no tan rápido como para salirte de la pista. En nuestro circuito simplificado, el coche está en una de un conjunto discreto de posiciones en una cuadrícula, representadas por las celdas del diagrama. La velocidad también es discreta, definida como el número de celdas de la cuadrícula que el coche se desplaza horizontal y verticalmente en cada paso de tiempo.
 
