@@ -1,0 +1,9 @@
+# Dependencias de los dos notebooks principales.
+numpy
+scipy
+matplotlib
+tensorflow
+scikit-learn
+nbformat
+nbclient
+ipykernel

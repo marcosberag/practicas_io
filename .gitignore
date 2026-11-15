@@ -1,0 +1,5 @@
+# Datos y modelos generados al ejecutar los cuadernos.
+.ipynb_checkpoints/
+__pycache__/
+*.keras
+*.joblib
