@@ -2,52 +2,44 @@
 
 **Grado en Ciencia de Datos e Inteligencia Artificial · UPM · Curso 2026-2027**
 
-Repositorio de trabajo para las prácticas de Investigación Operativa. Los enunciados proceden de los apuntes de la asignatura de Carlos Quesada González.
+## Práctica 1 · Versión para feedback
 
-## Contenido
+La práctica se presenta en **dos notebooks**, uno por cada parte del enunciado. Ambos incluyen el planteamiento, la explicación de la solución, el código comentado en castellano, las comprobaciones y las salidas guardadas. Se pueden revisar directamente en GitHub sin ejecutar el entrenamiento.
 
-```text
-Práctica 1/
-├── enunciado_practica_1.md
-├── Parte 1/
-│   └── parte1.ipynb          # Símplex combinado y L1-SVM
-├── Parte2/
-│   ├── parte2.ipynb          # MNIST, FGSM y apartados opcionales 5–7
-│   └── antecedentes/        # Fuentes originales y sus resultados históricos
-└── REVISION.md              # Cambios, comprobaciones y pendientes
-Práctica 2/
-├── enunciado_practica_2.md
-└── circuitos.png            # Imagen del enunciado
+| Archivo | Contenido |
+| --- | --- |
+| [Parte 1](Pr%C3%A1ctica%201/parte1.ipynb) | Símplex combinado, datos separables en dos dimensiones y formulación y resolución dual del L1-SVM |
+| [Parte 2](Pr%C3%A1ctica%201/parte2.ipynb) | MNIST con red neuronal y SVM gaussiana, FGSM, predicción y visualización de imágenes adversarias; opcionales 5–7 |
+| [Enunciado](Pr%C3%A1ctica%201/enunciado_practica_1.md) | Requisitos de la práctica y de la exposición |
+
+### Resultados comprobados
+
+Ejecución del 15 de noviembre de 2026, desde entornos limpios:
+
+- **Parte 1:** 28/28 pruebas del Símplex superadas; objetivo del L1-SVM coincidente entre primal, dual y HiGHS: **0,610824756**, con comprobación de factibilidad y complementariedad.
+- **Parte 2:** **98,82 %** de acierto de la red neuronal en test, **41.074 parámetros** y **98,33 %** de acierto de la SVM. Se verifican las propiedades numéricas del ataque FGSM y se muestran originales y adversarias con las predicciones de ambos modelos.
+- **Opcionales 5–7:** implementados, pero sin ejecutar en la versión guardada. Sus celdas indican expresamente ese estado.
+
+### Cuestiones para feedback
+
+Los cuadernos señalan sus limitaciones junto a las explicaciones correspondientes. El dual del L1-SVM introduce degeneración estructural, aunque la instancia incluida se resuelve y contrasta correctamente. En el entrenamiento adversario opcional queda pendiente decidir cómo separar la validación para evitar que una imagen original y su adversaria se repartan entre ambos conjuntos, y cómo ajustar el entrenamiento al requisito de 120.000 imágenes. También falta confirmar que la arquitectura de la red difiere de la de clase y de la de otros grupos.
+
+Los puntos 1–4 de la Parte 2 son los obligatorios y permiten obtener la máxima nota de esa parte según el enunciado; no es necesario ejecutar los opcionales para solicitar feedback sobre el trabajo obligatorio. La exposición de la Parte 1 se prepara por separado.
+
+### Ejecución
+
+El entorno verificado utiliza **Python 3.13.0, Windows y CPU**. Las versiones de las dependencias se recogen en [requirements.txt](requirements.txt).
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
-## Ejecución
+Abrir el notebook deseado en Jupyter o VS Code, seleccionar el entorno de Python y ejecutar las celdas en orden desde un kernel limpio. Cada notebook es independiente del otro.
 
-Se necesita **Python 3** y un entorno compatible con notebooks de Jupyter, como JupyterLab o VS Code con la extensión Jupyter. Las dependencias están en `requirements.txt`; las versiones utilizadas en la revisión se registran en `requirements-verificacion.txt`.
+La Parte 2 carga MNIST mediante Keras y lo descarga si no está en caché. Guarda `red_mnist.keras` en el directorio de ejecución. La ejecución comprobada de los apartados obligatorios tarda aproximadamente siete minutos en el equipo utilizado; el tiempo depende del dispositivo. Los opcionales se activan con `EJECUTAR_OPCIONALES = True` y pueden requerir bastante más tiempo y memoria, especialmente la SVM con 120.000 imágenes.
 
-1. Abrir `Práctica 1/Parte 1/parte1.ipynb`.
-2. Seleccionar un entorno de Python con NumPy, SciPy y Matplotlib instalados.
-3. Ejecutar las celdas en orden, desde el principio.
+Los borradores, cuadernos duplicados, resultados anteriores e informe detallado de revisión se conservan en el [historial de la versión consolidada](https://github.com/marcosberag/practicas_io/tree/296832983ad313b75ccdd196537fea11b3a6e0d5). Se han retirado de la versión actual para mantener una única ruta de lectura y ejecución.
 
-Para la Parte 2, abrir `Práctica 1/Parte2/parte2.ipynb` y ejecutar desde un entorno limpio con TensorFlow y scikit-learn. MNIST se descarga si no está en la caché de Keras. El cuaderno entrena la red y la SVM con los tamaños originales, y guarda `red_mnist.keras` en el directorio de ejecución. Los apartados opcionales 5–7 se activan con `EJECUTAR_OPCIONALES = True`; pueden exigir bastante tiempo y memoria, especialmente la SVM de 120.000 imágenes. Con el valor `False` sus salidas indican expresamente que no se han ejecutado.
+## Práctica 2 de la asignatura
 
-Los notebooks de `antecedentes/` se conservan íntegros como trazabilidad del trabajo previo. Algunos contienen errores, resultados sin código o dependencias de otras sesiones: no son la ruta recomendada de ejecución. Para remitir al profesor, utilizar los dos notebooks principales, el enunciado y el informe de revisión.
-
-## Símplex combinado
-
-La función principal, `simplex_completo(opt, c, A, rest, b)`, recibe un problema de programación lineal con variables originales no negativas:
-
-- `opt`: `"max"` o `"min"`.
-- `c`: coeficientes del objetivo, vector de longitud `n`.
-- `A`: matriz de restricciones, de dimensiones `m × n`.
-- `rest`: lista de `m` signos, `"<="` o `">="`.
-- `b`: términos independientes, vector de longitud `m`.
-
-Devuelve `(x, z, estado, M_f)`: variables originales, valor objetivo, estado de terminación y última tabla calculada. Cuando no se acredita una solución óptima, `x` y `z` son `None`.
-
-El método comienza con Símplex estándar si la base inicial es primal factible. En caso contrario, comprueba si puede comenzar con Símplex dual y, tras recuperar la factibilidad primal, pasa al estándar conservando la base.
-
-**Alcance:** se implementa el procedimiento combinado estudiado en clase. No se admiten restricciones de igualdad directamente ni se garantiza tratamiento general de degeneración. El dual del L1-SVM representa una igualdad mediante dos desigualdades y tiene una base inicial degenerada: la instancia incluida se verifica, pero no hay garantía general de ausencia de ciclos. Si la tabla inicial no es primal ni dual factible, el programa puede devolver `"no_resuelto"`; esto no significa que el problema sea infactible. No se implementa el método de dos fases.
-
-## Estado del trabajo
-
-Versión consolidada para recibir feedback. La Parte 1 incluye el L1-SVM y comprobaciones independientes. La Parte 2 reúne los apartados obligatorios y opcionales en un único flujo. Consultar `Práctica 1/REVISION.md` para distinguir resultados comprobados, históricos y pendientes.
+Se conservan su [enunciado](Pr%C3%A1ctica%202/enunciado_practica_2.md) y la imagen de los circuitos en la carpeta `Práctica 2`. Esta carpeta corresponde a la otra práctica de la asignatura; es distinta de la Parte 2 de la Práctica 1.
